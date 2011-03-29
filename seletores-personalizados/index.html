@@ -1,0 +1,350 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Seletores Personalizados</title>
+    <meta charset="utf-8" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <style>
+    *, html{
+    	font-family: Helvetica, Arial,sans-serif;
+    	margin: 0px;
+    	padding: 0px;
+    	font-size: 12px;
+    }
+
+    body{
+    	margin: 10px;
+    }
+
+    h1{
+    	font-size:40px;
+    	font-family: Georgia, "Times New Roman", serif;
+    	letter-spacing:-2px;
+    	margin:0 0 20px 0;
+    }
+    table tr td, table tr th{
+      padding:9px;
+    }
+    table tr th{
+      background-color:#333;
+      border-bottom:1px solid #ccc;
+      padding:12px;
+        color:#fff;
+        text-align:center;
+    }
+    table tr td{
+      border:1px dotted #ccc;
+    }
+    table tr.selected td{
+      background-color:#ffffcc;
+    }
+    ul#filtros{
+      list-style:none;
+      margin:0 0 20px 0;
+    }
+    ul#filtros li{
+      padding:4px;
+      margin:4px;
+      border-bottom:1px dotted #ccc;
+    }
+    small{
+      display:inline-block;
+      padding:3px;
+      color:#4ca5fe;
+      background-color:#f2f2f2;
+      margin:0 0 0 20px;
+      border-radius:3px;
+      -moz-border-radius:3px;
+      -webkit-border-radius:3px;
+    }
+    </style>
+    <script>
+    
+    $.expr[':'].em_atividade = function(obj){
+      return $(obj).data('atividade');
+    };
+    
+    $.expr[':'].posicao = function(obj, index, meta, stack){
+      if($(obj).find('td:last').text() == meta[3]) return true;
+      else return false;
+    };
+    
+    $.expr[':'].gols = function(obj, index, meta, stack){
+      var gols = parseInt($(obj).find('td:eq(3)').text());
+      if(gols >= meta[3]) return true;
+      else return false;
+    };
+    
+    $.expr[':'].jogos = function(obj, index, meta, stack){
+      var jogos = parseInt($(obj).find('td:eq(2)').text());
+      if(jogos >= meta[3]) return true;
+      else return false;
+    };
+    
+    $.expr[':'].sem_link = function(obj){
+      return ($(obj).attr('href') == "#");
+    };   
+    
+    $(function(){
+      
+      $('#btn-atividade').click(function(e){
+        $('tr').removeClass('selected');
+        $('.jogador:em_atividade').addClass('selected');
+      });
+      
+      $('#btn-posicao').click(function(e){
+        $('tr').removeClass('selected');
+        $('.jogador:posicao('+$('#posicao').val()+')').addClass('selected');
+      });
+      
+      $('#btn-gol').click(function(e){
+        $('tr').removeClass('selected');
+        $('.jogador:gols('+$('#gols').val()+')').addClass('selected');
+      });
+
+      $('#btn-jogo').click(function(e){
+        $('tr').removeClass('selected');
+        $('.jogador:jogos('+$('#jogos').val()+')').addClass('selected');
+      });
+
+      $('a:sem_link').click(function(e){
+        e.preventDefault();
+      });
+      
+    });
+    </script>
+  </head>
+  <body>
+    
+    <h1>jQuery: Seletores personalizados</h1>
+    
+    <ul id="filtros">
+      <li>Marcar jogadores que ainda estão em atividade <input type="button" id="btn-atividade" value="OK" /> <small>$(':em_atividade')</small></li>
+      <li>Marcar todos os <select id="posicao">
+        <option value="Goleiro">goleiros</option>
+        <option value="Defensor">defensores</option>
+        <option value="Lateral">laterais</option>
+        <option value="Meia">meias</option>
+        <option value="Atacante">atacantes</option>
+      </select> <input type="button" id="btn-posicao" value="OK" /> <small>ex: $(':posicao("Goleiro")')</small></li>
+      <li>Marcar jogadores com mais de <input type="text" id="gols" size="4" /> gols <input type="button" id="btn-gol" value="OK" />  <small>ex: $(':gols(10)')</small></li>
+            <li>Marcar jogadores com mais de <input type="text" id="jogos" size="4" /> jogos <input type="button" id="btn-jogo" value="OK" />  <small>ex: $(':jogos(142)')</small></li>
+    </ul>
+    
+    <table cellpadding="0" cellspacing="0">
+
+    		    <thead>
+
+    		    	<tr>
+
+
+
+    		    		<th>apelidos</th>
+    		    		<th>nome completo</th>
+    		    		<th>jogos</th>
+
+    		    		<th>gols</th>
+    		    		<th>posição</th>
+    		    	
+
+    		        </tr>
+    		    </thead>
+
+    		    <tbody>
+
+    				<tr class="jogador">
+
+    					<td>J&#xFA;nior</td>
+    					<td>Leovegildo Lins Gama J&#xFA;nior</td>
+
+    					<td>277</td>
+    					<td>19</td>
+    					<td>Lateral</strong></td>
+
+    					</tr>
+
+    				<tr class="jogador">
+    					<td>Zico</td>
+    					<td>Arthur Antunes Coimbra</td>
+
+    					<td>256</td>
+    					<td>137</td>
+
+    					<td>Meia</strong></td>
+    					</tr>
+
+    				<tr class="jogador">
+    					<td>Zinho</td>
+    					<td>Crizam C&#xE9;sar de Oliveira Filho</td>
+
+
+    					<td>192</td>
+    					<td>24</td>
+    					<td>Meia</strong></td>
+    					</tr>
+
+    				<tr class="jogador">
+    					<td>Ad&#xED;lio</td>
+
+    					<td>Ad&#xED;lio de Oliveira Gon&#xE7;alves</td>
+
+    					<td>181</td>
+    					<td>26</td>
+    					<td>Meia</strong></td>
+    				
+
+    				</tr>
+
+    				<tr class="jogador" data-atividade="true">
+    					<td>Leonardo Moura</td>
+    					<td>Leonardo da Silva Moura</td>
+
+    					<td>179</td>
+    					<td>27</td>
+    					<td>Lateral</strong></td>
+
+    					</tr>
+
+    				<tr class="jogador">
+    					<td>Andrade</td>
+    					<td>Jorge Lu&#xED;s Andrade da Silva</td>
+
+    					<td>160</td>
+
+    					<td>7</td>
+    					<td>Meia</strong></td>
+    					</tr>
+
+    				<tr class="jogador" data-atividade="true">
+    					<td>J&#xFA;lio C&#xE9;sar</td>
+
+    					<td>J&#xFA;lio C&#xE9;sar Soares de Esp&#xED;nola</td>
+
+    					<td>158</td>
+    					<td>0</td>
+    					<td>Goleiro</strong></td>
+    				
+
+    				</tr>
+
+    				<tr class="jogador">
+    					<td>F&#xE1;bio Baiano</td>
+    					<td>F&#xE1;bio da Silva Moraes</td>
+
+    					<td>143</td>
+    					<td>14</td>
+
+    					<td>Meia</strong></td>
+    					</tr>
+
+    				<tr class="jogador">
+    					<td>J&#xF4;natas</td>
+    					<td>J&#xF4;natas Domingos</td>
+
+
+    					<td>142</td>
+    					<td>8</td>
+    					<td>Meia</strong></td>
+    					</tr>
+
+    				<tr class="jogador">
+    					<td>J&#xFA;nior Baiano</td>
+
+    					<td>Raimundo Ferreira Ramos J&#xFA;nior</td>
+
+    					<td>140</td>
+    					<td>18</td>
+    					<td>Defensor</strong></td>
+    					</tr>
+
+
+    				<tr class="jogador">
+    					<td>Cantarelli</td>
+    					<td>Ant&#xF4;nio Luiz Cantarelli</td>
+
+    					<td>139</td>
+    					<td>0</td>
+    					<td>Goleiro</strong></td>
+
+    					</tr>
+
+    				<tr class="jogador">
+    					<td>Z&#xE9; Carlos</td>
+    					<td>Jos&#xE9; Carlos da Costa Ara&#xFA;jo</td>
+
+
+    					<td>137</td>
+    					<td>1</td>
+    					<td>Goleiro</strong></td>
+    					</tr>
+
+    				<tr class="jogador" data-atividade="true">
+    					<td>Ronaldo Angelim</td>
+
+    					<td>Ronaldo Sim&#xF5;es Angelim</td>
+
+    					<td>135</td>
+    					<td>8</td>
+    					<td>Defensor</strong></td>
+    					</tr>
+
+
+    				<tr class="jogador">
+    					<td>A&#xED;lton</td>
+    					<td>A&#xED;lton dos Santos Ferraz</td>
+
+    					<td>134</td>
+    					<td>6</td>
+    					<td>Meia</strong></td>
+
+    					</tr>
+
+    				<tr class="jogador" data-atividade="true">
+    					<td>Athirson</td>
+    					<td>Athirson Mazzoli e Oliveira</td>
+
+    					<td>131</td>
+
+    					<td>11</td>
+    					<td>Lateral</strong></td>
+    					</tr>
+
+    				<tr class="jogador">
+    					<td>Fernando</td>
+    					<td>Fernando Santos</td>
+
+
+    					<td>131</td>
+    					<td>3</td>
+    					<td>Defensor</strong></td>
+    					</tr>
+
+    				<tr class="jogador" data-atividade="true">
+    					<td>Ibson</td>
+
+    					<td>Ibson Barreto da Silva</td>
+
+    					<td>130</td>
+    					<td>24</td>
+    					<td>Meia</strong></td>
+    					</tr>
+
+
+    				<tr class="jogador" data-atividade="true">
+    					<td>Obina</td>
+    					<td>Manuel de Brito Filho</td>
+
+    					<td>130</td>
+    					<td>33</td>
+    					<td>Atacante</strong></td>
+
+    					</tr>
+    		    </tbody>
+
+    		    </table>
+    
+    <p style="margin:20px 0 20px 0;">* fonte: <a href="http://futpedia.globo.com/flamengo/jogadores">Futpedia</a></p>
+
+            <p><a href="#">Este link ainda não tem link :-)</a></p>
+  </body>
+</html>
