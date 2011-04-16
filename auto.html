@@ -8,36 +8,46 @@
   <body>
     <div id="container">
       <h1>Tweets do Tableless</h1>
-			<p><a href="auto.html">Clique aqui para visualizar o exemplo com scroll</a></p>
-			<ul id="lista-tweets"></ul>
-      <p><a href="#" id="carrega-tweets" data-pagina="1">Mais!</a></p>
+			<p><a href="index.html">Clique aqui para visualizar o exemplo com link</a></p>
+      <ul id="lista-tweets"></ul>
     </div>
-    <script>
+
+   <script>
+    var ajax = "";
     $(function(){
       retorna_tweets(1);
-      $('#carrega-tweets').click(function(e){
-        retorna_tweets($(this).data('pagina'));
-        e.preventDefault();
-      });
+      $('body').data('pagina', 1);
+      inicializa_scroll();
     });
-    
 
-    
+    function inicializa_scroll(){
+      $(window).scroll(function() {
+        if(($(window).scrollTop() + $(window).height() + 10) >= $(document).height()) {
+          $(window).unbind('scroll');
+          ajax.abort();
+          retorna_tweets($('body').data('pagina'));
+        }
+      });
+    }
+
     function retorna_tweets(pagina){
-      $('#carrega-tweets').hide();
       $('#lista-tweets').append('<li class="carregando">Aguarde, carregando...</li>');
+
       var screen_name = 'tableless';
-      var formato = 'json';
-      var url = 'http://api.twitter.com/1/statuses/user_timeline.'+formato+"?callback=?";
-      $.getJSON(url, {screen_name:screen_name, page:pagina}, function(tweets){
+      var url = 'http://api.twitter.com/1/statuses/user_timeline.json?callback=?';
+    
+      $('body').data('pagina', pagina + 1);
+
+      ajax = $.getJSON(url, {screen_name:screen_name, page:pagina}, function(tweets){
         $('.carregando').fadeOut(function(){
           for(x in tweets)
             $('#lista-tweets').append('<li>'+tweets[x].text+'</li>');
+          inicializa_scroll();
           $(this).remove();
-          $('#carrega-tweets').data('pagina', pagina + 1).fadeIn();
         });
       });
     }
+
     </script>
 
   </body>
